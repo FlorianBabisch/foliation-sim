@@ -1,7 +1,0 @@
-foliationSimulation module
-==========================
-
-.. automodule:: foliationSimulation
-   :members:
-   :undoc-members:
-   :show-inheritance:
