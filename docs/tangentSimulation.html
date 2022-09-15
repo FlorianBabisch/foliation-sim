@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tangentSimulation module &mdash; foliation-sim 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> foliation-sim
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">foliation-sim</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">foliation-sim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>tangentSimulation module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tangentSimulation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tangentSimulation">
+<span id="tangentsimulation-module"></span><h1>tangentSimulation module<a class="headerlink" href="#module-tangentSimulation" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="tangentSimulation.critical_coeff">
+<span class="sig-prename descclassname"><span class="pre">tangentSimulation.</span></span><span class="sig-name descname"><span class="pre">critical_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tangentSimulation.html#critical_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tangentSimulation.critical_coeff" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the values of the critical coefficient as well as the
+the signed curvature and chi which is the critical coefficient
+divided by its absolute value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xValues</strong> (<em>list</em>) – List of x-values.</p></li>
+<li><p><strong>func</strong> (<em>SymPy type</em>) – Function that characterizes the initial surface.</p></li>
+<li><p><strong>s</strong> (<em>float</em>) – Value of how far the initial surface is pushed along the normals.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tangentSimulation.main">
+<span class="sig-prename descclassname"><span class="pre">tangentSimulation.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tangentSimulation.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tangentSimulation.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tangentSimulation.plotting">
+<span class="sig-prename descclassname"><span class="pre">tangentSimulation.</span></span><span class="sig-name descname"><span class="pre">plotting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputSaveFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueLimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tangentSimulation.html#plotting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tangentSimulation.plotting" title="Permalink to this definition"></a></dt>
+<dd><p>Is the method regularly called by the interact method.
+Modifies the initial figure by giving it a title etc., handles the user inputs,
+controls the different choices,
+displays the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>str</em>) – User input that is used as the function that characterizes the initial surface.</p></li>
+<li><p><strong>inputSaveFileName</strong> (<em>str</em>) – Name that is used when saving a plot.</p></li>
+<li><p><strong>s</strong> (<em>float</em>) – Parameter of how far the initial surface should be pushed along the normals.</p></li>
+<li><p><strong>valueLimit</strong> (<em>integer</em>) – Interval limit for the x-values.</p></li>
+<li><p><strong>saveFile</strong> (<em>boolean</em>) – If True the plot that it shown after pressing the ‘Run interact’ button is saved under the name written in the
+‘Name of Image’ textbox.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tangentSimulation.save_plot">
+<span class="sig-prename descclassname"><span class="pre">tangentSimulation.</span></span><span class="sig-name descname"><span class="pre">save_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tangentSimulation.html#save_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tangentSimulation.save_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Save the current figure as .pdf and .eps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – Holds all plot elements.</p></li>
+<li><p><strong>axis</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – The subplot which will be saved.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Name under which the images are saved.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tangentSimulation.unit_tangent_vector">
+<span class="sig-prename descclassname"><span class="pre">tangentSimulation.</span></span><span class="sig-name descname"><span class="pre">unit_tangent_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tangentSimulation.html#unit_tangent_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tangentSimulation.unit_tangent_vector" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the components of the normalized tangential vector of an
+initial surfaces pushed along its normals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xValues</strong> (<em>list</em>) – List of x-values.</p></li>
+<li><p><strong>func</strong> (<em>SymPy type</em>) – Function that characterizes the initial surface.</p></li>
+<li><p><strong>s</strong> (<em>float</em>) – Value of how far the initial surface is pushed along the normals.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized components of the tangent vector.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Florian Babisch.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

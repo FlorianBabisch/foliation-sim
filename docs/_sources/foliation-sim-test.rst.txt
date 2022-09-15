@@ -1,0 +1,7 @@
+foliation\-sim\-test module
+===========================
+
+.. automodule:: foliation-sim-test
+   :members:
+   :undoc-members:
+   :show-inheritance:
