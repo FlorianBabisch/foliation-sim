@@ -19,6 +19,8 @@ import math
 from ipywidgets import interact, interactive, fixed, interact_manual, IntSlider, HBox, VBox, Layout, Dropdown
 from IPython.display import display, clear_output
 import ipywidgets as widgets
+from matplotlib import colors
+import matplotlib as mpl
 
 # SymPy symbols
 # In the following x cannot be used as a variable for anything else!
@@ -26,11 +28,13 @@ x = Symbol('x')
 
 # Global figure
 # Set sharex to False if you want to save an image of only the first axis
-fig, (ax1, ax2) = plt.subplots(2, sharex=True)
+# Set it to True if you want to have both plots use the same axis
+fig, (ax1, ax2) = plt.subplots(2, sharex=False)
 
 # Class is not written by me, source: 
 # https://stackoverflow.com/questions/13054758/python-finding-multiple-roots-of-nonlinear-equation
 class ClassRoots:
+    # binary search
     def __init__(self):
         pass
 
@@ -147,10 +151,13 @@ def transform_vector(xValues, vector):
         tuple 
             Components of the vector evaluated at the given x-coordinates.
     """
-    npFunc0 = lambdify(x, vector[0], 'numpy')
-    npFunc1 = lambdify(x, vector[1], 'numpy')
-    v0 = npFunc0(xValues)
-    v1 = npFunc1(xValues)
+    length = len(xValues)
+    v0 = vector[0]
+    v1 = vector[1]
+    xValues, v0 = transform_function(xValues, v0)
+    xValues, v1 = transform_function(xValues, v1)
+    v0 = np.asarray(v0)
+    v1 = np.asarray(v1)
     return v0, v1
 
 
@@ -203,11 +210,14 @@ def euclidean_normal_values(xValues, func):
         tuple 
             The x- and y-values of the normal vector of the given function.
     """
+    length = len(xValues)
     # check if function is constant
     if isfloat(func):
-        f = [0 for i in range(len(xValues))]
-        xValues = [1 for i in range(len(xValues))]
-        return f, xValues
+        xComponent = [0 for i in range(length)]
+        yComponent = [1 for i in range(length)]
+        xComponent = np.asarray(xComponent)
+        yComponent = np.asarray(yComponent)
+        return xComponent, yComponent
     else:
         return euclidean_unit_vector(transform_vector(xValues, euclidean_normal_vector(func)))
 
@@ -227,11 +237,16 @@ def minkowski_normal_values(xValues, func):
         tuple 
             The x- and y-values of the normal vector of the given function.
     """
+    length = len(xValues)
+    # check if function is constant
     if isfloat(func):
-        f = [0 for i in range(len(xValues))]
-        xValues = [1 for i in range(len(xValues))]
-        return f, xValues
-    return minkowski_unit_vector(transform_vector(xValues, minkowski_normal_vector(func)))
+        xComponent = [0 for i in range(length)]
+        yComponent = [1 for i in range(length)]
+        xComponent = np.asarray(xComponent)
+        yComponent = np.asarray(yComponent)
+        return xComponent, yComponent
+    else:
+        return minkowski_unit_vector(transform_vector(xValues, minkowski_normal_vector(func)))
 
 
 def euclidean_norm(vector):
@@ -247,7 +262,11 @@ def euclidean_norm(vector):
         float
             Euclidean norm of the given vector.
     """
-    return np.sqrt(vector[0]**2 + vector[1]**2)
+    v0 = vector[0]
+    v1 = vector[1]
+    radicand = v0**2 + v1**2
+    radicand = radicand.astype(float)
+    return np.sqrt(radicand)
 
 
 def minkowski_norm(vector):
@@ -263,7 +282,13 @@ def minkowski_norm(vector):
         float
             Minkowski norm of the given vector.
     """
-    radicand = np.abs(vector[0]**2 - vector[1]**2)
+    v0 = vector[0]
+    v1 = vector[1]
+    try:
+        radicand = np.abs(v0**2 - v1**2)
+    except:
+        print('Norm is infinite.')
+    radicand = radicand.astype(float)
     return np.sqrt(radicand)
 
 
@@ -298,10 +323,10 @@ def minkowski_unit_vector(vector):
             Normalized components of the given vector.
     """
     norm = minkowski_norm(vector)
-    if any(entry == 0 for entry in norm) == False:
-        return vector[0] / norm, vector[1] / norm
-    else:
+    if any(entry == 0 for entry in norm):
         return vector[0], vector[1]
+    else:
+        return vector[0] / norm, vector[1] / norm
         
 
 def euclidean_inner_product(v, w):
@@ -338,65 +363,26 @@ def minkowski_inner_product(v, w):
     """
     return v[0] * w[0] - v[1] * w[1]
 
-
-def euclidean_angle_between_vectors(v,w):
-    """Calculates angle between two 2 dimensional vectors in Euclidean space.
-    
+def reverse_sublist(lst,start,end):
+    """Reverses sublist of given list
+        
         Parameters
         ----------
-        v : tuple 
-            Vector with two components.
-        w : tuple
-            Vector with two components.
+        lst : list
+            List where sublist is reversed.
+        start : integer
+            Index where sublist starts.
+        end : integer
+            Index where sublist ends.
         
         Returns
         -------
-        float 
-            Angle between the vectors v and w.
-    """
-    return np.arccos(euclidean_inner_product(v / np.linalg.norm(v), w / np.linalg.norm(w)))
-
-
-def unit_circle(t, center):
-    """Calculate values of a unit circle around a given point.
+        lst
+            List where sublist is reversed.
     
-        Parameters
-        ----------
-        t : list
-            Values that parametrize the circle.
-        center : tuple
-            Point around which the unit circle is centered. 
-
-        Returns
-        -------
-        tuple
-            The x- and y-values of the points of the unit circle.
     """
-    px = center[0] + np.cos(t)
-    py = center[1] + np.sin(t)
-    return px, py 
-
-
-def circle(t, center, radius):
-    """Calculate values of a circle with given radius centered around a given point.
-
-        Parameters
-        ----------
-        t : list
-            Values that parametrize the circle.
-        center : tuple
-            Point around which the circle is centered.
-        radius : float
-            Radius of the circle.
-       
-        Returns
-        -------
-        tuple
-            The x- and y-values of the points of the unit circle.
-    """
-    px = center[0] + np.cos(t) * radius
-    py = center[1] + np.sin(t) * radius
-    return px, py 
+    lst[start:end] = lst[start:end][::-1]
+    return lst
 
 
 def curvature(func):
@@ -467,111 +453,6 @@ def osculating_circle(point, func):
         kx = px - (npFuncPrime(px)*(1 + npFuncPrime(px)**2)) / npFunc2Prime(px)
         ky = py + (1 + npFuncPrime(px)**2) / npFunc2Prime(px)
     return r, kx, ky
-
-
-def find_duplicates(lst):
-    """Returns duplicates in a given list.
-    
-        Parameters
-        ----------
-        lst : list
-            List of values.
-        
-        Returns
-        -------
-        list 
-            Values that appeared more than once.
-    """
-    seen = set()
-    uniques, duplicates = [], []
-    for x in lst:
-        if x not in seen:
-            uniques.append(x)
-            seen.add(x)
-        else:
-            duplicates.append(x)
-    return duplicates
-
-
-def closest_value(list, value):
-    """Returns value closest to the input value in a given list.
-        
-        Parameters
-        ----------
-        lst : list
-            List of numbers.
-        value : float
-            Value of which the closest element in the list is searched for.
-
-        Returns
-        -------
-        tuple
-            Index of element of array that is closest to the given value and the corresponding value in the list.
-    """
-    arr = np.asarry(list)
-    index = (np.abs(arr - value)).argmin()
-    return index, arr[index]
-
-
-def smallest_distance(lst):
-    """Find smallest distance between neighboring elements of a list.
-
-        Parameters
-        ----------
-        lst : list
-            List of numbers.
-    
-        Returns
-        -------
-        float
-            Smallest distance between neighboring elements.
-    """
-    length = len(lst)
-    distances = []
-    for i in range(length-1):
-        if i < length:
-            distances.append(np.abs(lst[i] - lst[i+1]))
-    return np.min(distances)
-
-
-def index_normal_sign_flip(surface):
-    """ Returns index of x-coordinate where a sign flip of the normal vectors appears.
-
-        Parameters
-        ----------
-        surface : tuple
-            The x- and y-coordinates of a 1-surface.
-
-        Returns
-        -------
-        integer
-            Index of x-coordinate where the normal vector of the surfaces changes sign.
-    """
-    if len(surface[0]) == len(surface[1]): length = len(surface[0])
-    for i in range(length-1):
-        if (surface[0][i] < 0 and surface[0][i+1] > 0) or (surface[0][i] > 0 and surface[0][i+1] < 0):
-            return i
-
-
-def angle_at_sign_flip(surface):
-    """Returns the angle between the two normal vectors of a 1-surface 
-       at which the x-component changes sign.
-    
-        Parameters
-        ----------
-        surface : tuple
-            The x- and y-coordinates of a 1-surface.
-        
-        Returns
-        -------
-        float 
-            Angle between two normal vectors that have different sign in the x-component.
-    """
-    i = index_normal_sign_flip(surface)
-    sx,sy = surface
-    u = [sx[i], sy[i]]
-    v = [sx[i+1], sy[i+1]]
-    return euclidean_angle_between_vectors(u, v)
 
 
 def push_surface(initialSurface, unitNormalVector, s):
@@ -656,7 +537,8 @@ def parameter_self_intersection(
         spacing, 
         initialSurface, 
         unitNormalVector, 
-        direction):
+        direction,
+        metric):
     """Returns list of parameter intervals of the swallow tails of the surfaces 
         obtained by pushing the initial surface along the normals. 
        
@@ -686,6 +568,8 @@ def parameter_self_intersection(
             The x- and y-coordinates of normal vectors of initial surface.
         direction : integer
             Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.
+        metric : boolean
+            If True, then use Euclidean metric, else use Minkowski metric.
         
         Returns
         -------
@@ -700,7 +584,9 @@ def parameter_self_intersection(
     xs, ys = calculate_self_intersections(newSurface)
     if not xs or not ys: return [[nan, nan]]
     if len(xs) == len(ys): lengthSelfInts = len(xs)
-
+    xs = np.asarray(xs)
+    ys = np.asarray(ys)
+    
     # Create list of intervals of parameters that parametrize the swallow tail
     # this is done for every point where the surface self-intersects, because there the swallow tails start
     # Assumption: The swallow tails are not tilted and do not intersect another swallow tail of the same surface.
@@ -709,31 +595,46 @@ def parameter_self_intersection(
     # 2) Consider only points of the surface that lie in a region 0.02 to the left and 0.02 to the right of point of self-intersection
     # 2.1) Note that x-values are always 0.01 apart from one another.
     # 3) Consider only points that lie above or below the swallow tail depending on how it is oriented
-    # 3.1) For s > 0 the swallow tail is below the surface and for s < 0 it is above the surface
+    # 3.1) Euclidean Case: For s > 0 the swallow tail is "below" the surface and for s < 0 it is "above" the surface
+    # 3.2) Minkowski Case: For s < 0 the swallow tails is "above" the surface and for s < 0 it is "below" the surface
     # 4) Divide the remaining points into points that lie to the left and to the right of the self-intersection
     # 5) Take the largest x-value of the points to the left of the self-intersection and the smallest x-value
     #    of the points to the right of the self-intersection. These are the x-values that define the parameter
     #    interval of the swallow tail.
 
+    # Orientation determines whether tail is "above" surface or "below".
+    orientation = 0
+    if metric:
+        if s > 0: orientation = -1
+        else: orientation = +1
+    else:
+        if s < 0: orientation = -1
+        else: orientation = +1
+
     for i in range(lengthSelfInts):
         tailInterval, leftxValue, rightxValue = [], [], []
         for xValue in xValues:
-            normal = euclidean_normal_values(xValue, func)
+            xCopy = xValue
+            xValue = np.asarray([xValue])
+            if metric:
+                normal = euclidean_normal_values(xValue, func)
+            else:
+                normal = minkowski_normal_values(xValue, func)
             nx = normal[0] * s + xValue
             ny = normal[1] * s + npF(xValue)
             if np.abs(xs[i] - nx) <= 0.02:
-                if s > 0:
+                if orientation < 0:
                     if ny >= ys[i]:
                         if nx < xs[i]:
-                            leftxValue.append(xValue)
+                            leftxValue.append(xCopy)
                         else:
-                            rightxValue.append(xValue)
+                            rightxValue.append(xCopy)
                 else:
                     if ny <= ys[i]:
                         if nx < xs[i]:
-                            leftxValue.append(xValue)
+                            leftxValue.append(xCopy)
                         else:
-                            rightxValue.append(xValue)
+                            rightxValue.append(xCopy)
         if leftxValue and rightxValue:
             tailInterval = [np.max(leftxValue), np.min(rightxValue)]
         else: tailInterval = [nan, nan]
@@ -773,18 +674,16 @@ def draw_curvature(xValues, func):
     if isfloat(func):
         curv = [0 for i in xValues]
         ax2.plot(xValues, curv)
+        return
     # if function is linear
-    elif func.is_polynomial():
-        if degree(func, x) == 1 or degree(func, x) == 0:
+    if func.is_polynomial():
+        if degree(func, x) == 1:
             curv = [0 for i in xValues]
             ax2.plot(xValues, curv)
-        else:
-            curv = lambdify(x, curvature(func), 'numpy')
-            ax2.plot(xValues, curv(xValues))
+            return
     # all other cases
-    else:
-        curv = lambdify(x, curvature(func), 'numpy')
-        ax2.plot(xValues, curv(xValues))
+    curv = lambdify(x, curvature(func), 'numpy')
+    ax2.plot(xValues, curv(xValues))
 
 
 def draw_centers_osc_circ(surface, func, xValues, connectedCircles):
@@ -835,7 +734,8 @@ def draw_centers_osc_circ(surface, func, xValues, connectedCircles):
     except ValueError: # raised if radii is empty
         print('No Radii could be calculated.')
     if connectedCircles:
-        ax1.plot(kx_surf, ky_surf, color='green', label='Centers of Osculating Circles')
+        #ax1.plot(kx_surf, ky_surf, color='green', label='Centers of Osculating Circles')
+        ax1.plot(kx_surf, ky_surf, color='green', label='Focal Locus')
     else:
         ax1.scatter(kx_surf, ky_surf, color='green', label='Centers of Osculating Circles', marker='.', s=3)
  
@@ -906,7 +806,7 @@ def draw_tangents(xValues, func, s):
     ax1.quiver(xc, yc, c1 / norm, c2 / norm)
 
 
-def draw_surfaces(numberOfSurfaces, spacing, initialSurface, unitNormalVectors, direction, sameSurfaceColor):
+def draw_surfaces(numberOfSurfaces, spacing, initialSurface, unitNormalVectors, direction, sameSurfaceColor, cmap, cnorm):
     """Draws the surfaces that arise when pushing the initial surface along the normal lines.
     
         Parameters
@@ -924,13 +824,17 @@ def draw_surfaces(numberOfSurfaces, spacing, initialSurface, unitNormalVectors, 
             Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.
         sameSurfaceColor : boolean
             Whether the surfaces are drawn with the same color or with individual colors.
+        cmap : matplotlib.colors.LinearSegmentedColormap
+        cnorm : matplotlib.colors.Normalize
     """
     for i in range(numberOfSurfaces+1):
         if i == 0: continue
         if sameSurfaceColor:
             if direction == +1 and i > 0: c = 'blue'
             if direction == -1 and i > 0: c = 'green'
-        else: c = None
+        else: 
+            if direction == +1 and i > 0: c = cmap(cnorm(direction*i))
+            if direction == -1 and i > 0: c = cmap(cnorm(direction*i))
         distance = i / spacing
         s = distance * direction
         newSurface = push_surface(initialSurface, unitNormalVectors, s)
@@ -945,7 +849,10 @@ def draw_modified_surfaces(
         initialSurface, 
         unitNormalVectors, 
         direction, 
-        sameSurfaceColor):
+        sameSurfaceColor,
+        metric,
+        cmap,
+        cnorm):
     """Draws modified surfaces, that is the surfaces where the swallow tail is removed. 
         It also prints the parameter interval of the swallow tails that are drawn.
 
@@ -968,15 +875,21 @@ def draw_modified_surfaces(
             Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.
         sameSurfaceColor : boolean
             Whether the surfaces are drawn with the same color or with individual colors.
+        metric : boolean
+            If True, then use Euclidean metric, else use Minkowski metric.
+        cmap : matplotlib.colors.LinearSegmentedColormap
+        cnorm : matplotlib.colors.Normalize
     """
     for i in range(1, numberOfSurfaces+1):
         xValues_mod = np.arange(-valueLimit, valueLimit, 0.01)  
         if sameSurfaceColor:
             if direction == +1 and i > 0: c = 'blue'
             if direction == -1 and i > 0: c = 'green'
-        else: c = None
+        else: 
+            if direction == +1 and i > 0: c = cmap(cnorm(direction*i))
+            if direction == -1 and i > 0: c = cmap(cnorm(direction*i))
         distance = i / spacing
-        allTailIntervals = parameter_self_intersection(xValues_mod, func, i, spacing, initialSurface, unitNormalVectors, direction)
+        allTailIntervals = parameter_self_intersection(xValues_mod, func, i, spacing, initialSurface, unitNormalVectors, direction, metric)
         # modify parameter interval
         for j in range(len(allTailIntervals)):
             tailInterval = allTailIntervals[j]
@@ -987,7 +900,10 @@ def draw_modified_surfaces(
                         for k in range(len(xValues_mod)):
                             if  xValues_mod[k] > tailInterval[0] and xValues_mod[k] < tailInterval[1]:
                                 xValues_mod[k] = np.nan
-            newNormics = euclidean_normal_values(xValues_mod, func)
+            if metric:
+                newNormics = euclidean_normal_values(xValues_mod, func)
+            else:
+                newNormics = minkowski_normal_values(xValues_mod, func)
         newSurface = push_surface(initialSurface, newNormics, direction * distance)
         ax1.plot(*newSurface, color=c, label='s = {}'.format(round(direction * distance, 3)))
 
@@ -1033,14 +949,43 @@ def save_plot(filename):
     fig.savefig('figures/full-'+filename+'.pdf', bbox_inches='tight')
     # Save just the portion inside the second axis's boundaries
     extent = ax1.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-    # Pad the saved area by 10% in the x-direction and 20% in the y-direction and save as pdf
-    fig.savefig('figures/'+filename+'.pdf', bbox_inches=extent.expanded(1.2, 1.2))
+    # Pad the saved area by 40% in the x-direction and 25% in the y-direction and save as pdf
+    fig.savefig('figures/'+filename+'.pdf', bbox_inches=extent.expanded(1.4, 1.25))
     # save whole figure as eps
     fig.savefig('figures/full-'+filename+'.eps', bbox_inches='tight', format='eps', dpi=1200)
     # Save just the portion inside the second axis's boundaries
     extent = ax1.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-    # Pad the saved area by 10% in the x-direction and 20% in the y-direction and save as eps
-    fig.savefig('figures/'+filename+'.eps', bbox_inches=extent.expanded(1.2, 1.2), format='eps', dpi=1200)
+    # Pad the saved area by 40% in the x-direction and 20% in the y-direction and save as eps
+    fig.savefig('figures/'+filename+'.eps', bbox_inches=extent.expanded(1.4, 1.2), format='eps', dpi=1200)
+
+
+def py_to_tex(str):
+    """Replaces python operators with latex operators.
+        
+        Parameters 
+        ----------
+        str : str
+            String python expressions are replaced by the proper latex expressions.
+        
+        Returns
+        -------
+        str 
+            Modified string.
+
+    """
+    str = str.replace('**', '^')
+    str = str.replace('*', ' \\cdot ')
+    str = str.replace('sin', ' \\sin ')
+    str = str.replace('cos', ' \\cos ')
+    str = str.replace('tan', ' \\tan ')
+    str = str.replace('cot', ' \\cot ')
+    str = str.replace('sinh', ' \\sinh ')
+    str = str.replace('cosh', ' \\cosh ')
+    str = str.replace('tanh', ' \\tanh ')
+    str = str.replace('coth', ' \\coth ')
+    str = str.replace('exp', ' \\exp ')
+    str = str.replace('log', ' \\log ')
+    return str
 
 def drawing( 
         inputFunction,
@@ -1128,12 +1073,16 @@ def drawing(
             If True the plot that it shown after pressing the 'Run interact' button is saved under the name written in the
             'Name of Image' textbox.
     """
+    titleFunction = py_to_tex(str(inputFunction))
     # Settings of figure and axis
     fig.set_figheight(10)
     fig.set_figwidth(10)
-    ax1.set_title(r"Evolution of initial surface $f(x) =$" + str(inputFunction))
-    ax2.set_title(r"Signed curvature $k$")
+    ax1.set_title(r'Evolution of the initial surface $f(x) = ' + titleFunction + r'$.')
+    ax1.set_xlabel(r'$x$')
+    ax2.set_title(r'Signed curvature $k$')
     ax2.set_xlabel(r'$x$')
+    ax1.minorticks_on()
+    ax2.minorticks_on()
     if changeLimits == True:
         ax1.set_xlim(-negXLim, posXLim)
         ax1.set_ylim(-negYLim, posYLim)
@@ -1141,6 +1090,14 @@ def drawing(
     # Create evenly spaced values within a given interval
     xValues = np.arange(-valueLimit, valueLimit, 0.01)
     sValues = np.arange(-numberOfPastSurfaces / spacing, numberOfFutureSurfaces / spacing, 0.01)
+    # create normalized cmap
+    cmap = mpl.cm.coolwarm
+    if numberOfFutureSurfaces == 0:
+        cnorm = mpl.colors.Normalize(vmin=-numberOfPastSurfaces, vmax=numberOfPastSurfaces)
+    elif numberOfPastSurfaces == 0:
+        cnorm = mpl.colors.Normalize(vmin=-numberOfFutureSurfaces, vmax=numberOfFutureSurfaces)
+    else:
+        cnorm = mpl.colors.Normalize(vmin=-numberOfPastSurfaces, vmax=numberOfFutureSurfaces)
     # Transform text to python expression
     func = x
     try:
@@ -1151,33 +1108,37 @@ def drawing(
     initialSurface = transform_function(xValues, func)
     # Choice of metric
     if metric == True:
+        ax1.set_ylabel(r'$y$')
+        ax2.set_ylabel(r'$k$')
         unitNormalVectors = euclidean_normal_values(xValues, func)
         draw_curvature(xValues, func)
         # Choice of drawing the centers of osculating circles
         if showCentersOscCircle == True:
             draw_centers_osc_circ(initialSurface, func, xValues, connectedCenters)
     else:
+        ax1.set_ylabel(r'$t$')
+        ax2.set_ylabel(r'$k$')
         unitNormalVectors = minkowski_normal_values(xValues, func)
     # Choice of drawing normics
     if showNormics == True:
         draw_normics(sValues, initialSurface, unitNormalVectors, normicSpacing)
     # Draw initial surface
-    ax1.plot(*initialSurface, 'pink', label='s = 0')
+    ax1.plot(*initialSurface, color=cmap(cnorm(0)), label='s = {}'.format(0))
     if showSurface == True:
         if showTails == True:
-            # Draw 'future' surfaces
-            if numberOfFutureSurfaces > 0:
-                draw_surfaces(numberOfFutureSurfaces, spacing, initialSurface, unitNormalVectors, +1, sameSurfaceColor)
             # Draw 'past' surfaces
             if numberOfPastSurfaces > 0:
-                draw_surfaces(numberOfPastSurfaces, spacing, initialSurface, unitNormalVectors, -1, sameSurfaceColor)
-        else: 
-            # Draw modified 'future' surfaces
+                draw_surfaces(numberOfPastSurfaces, spacing, initialSurface, unitNormalVectors, -1, sameSurfaceColor, cmap, cnorm)
+            # Draw 'future' surfaces
             if numberOfFutureSurfaces > 0:
-                draw_modified_surfaces(func, valueLimit, numberOfFutureSurfaces, spacing, initialSurface, unitNormalVectors, +1, sameSurfaceColor)    
+                draw_surfaces(numberOfFutureSurfaces, spacing, initialSurface, unitNormalVectors, +1, sameSurfaceColor, cmap, cnorm)
+        else: 
             # Draw modified 'past' surfaces
             if numberOfPastSurfaces > 0:
-                draw_modified_surfaces(func, valueLimit, numberOfPastSurfaces, spacing, initialSurface, unitNormalVectors, -1, sameSurfaceColor)    
+                draw_modified_surfaces(func, valueLimit, numberOfPastSurfaces, spacing, initialSurface, unitNormalVectors, -1, sameSurfaceColor, metric, cmap, cnorm)    
+            # Draw modified 'future' surfaces
+            if numberOfFutureSurfaces > 0:
+                draw_modified_surfaces(func, valueLimit, numberOfFutureSurfaces, spacing, initialSurface, unitNormalVectors, +1, sameSurfaceColor, metric, cmap, cnorm)    
     # Draw tangent vector
     if tangentVector == True:
         draw_tangents(tangent_xValues, func, numberOfFutureSurfaces / spacing)
@@ -1196,7 +1157,15 @@ def drawing(
         handles, labels = ax1.get_legend_handles_labels()
         # Sort both labels and handles by labels
         labels, handles = zip(*sorted(zip(labels, handles), key=lambda t: t[0]))
-        ax1.legend(handles, labels, loc='lower right')
+        labels = reversed(labels)
+        handles = reversed(handles)
+        if numberOfPastSurfaces > 0:
+            # reverse order of negative s labels
+            labels = list(labels)
+            handles = list(handles)
+            labels = reverse_sublist(labels, numberOfFutureSurfaces+1, numberOfFutureSurfaces + numberOfPastSurfaces + 1)
+            handles = reverse_sublist(handles, numberOfFutureSurfaces+1, numberOfFutureSurfaces + numberOfPastSurfaces + 1)
+        ax1.legend(handles, labels, loc='center left', bbox_to_anchor=(1, 0.5))
 
     # Save plots
     if saveFile == True:
@@ -1207,7 +1176,6 @@ def drawing(
     display(fig)
     ax1.cla()
     ax2.cla()
-
 
 def main():
     # Style such that whole text fits
@@ -1244,7 +1212,7 @@ def main():
         tangentVector = widgets.Checkbox(value=False, description='Show Tangent Vector', style=style),
         showSelfIntersections = widgets.Checkbox(value=False, description='Show Points of Self-Intersection', style=style),
         showTails = widgets.Checkbox(value=True, description='Show Swallow Tails', style=style),
-        sameSurfaceColor = widgets.Checkbox(value=True, description='All Surfaces same Color', style=style),
+        sameSurfaceColor = widgets.Checkbox(value=False, description='All Surfaces same Color', style=style),
         saveFile = widgets.Checkbox(value=False, description='Save File', style=style),
         inputSaveFileName = widgets.Text(
             placeholder='Insert Name of Image',

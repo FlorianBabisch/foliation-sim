@@ -1,5 +1,6 @@
 # -----------------------------------------------------------
-# Simulates different quantities of a surface pushed along its 
+# Simulates different quantities, such as the components of
+# the tangent vector, of a surface pushed along its 
 # normal lines in the Euclidean case.
 #
 # (C) 2022 Florian Babisch, Tübingen, Germany
@@ -22,7 +23,10 @@ from sympy import *
 # In the following x cannot be used as a variable for anything else!
 x = Symbol('x')
 
-fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
+# Global figure
+# Set sharex to False if you want to save an image of only the first axis
+# Set it to True if you want to have both plots use the same axis
+fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=False)
 
 def unit_tangent_vector(xValues, func, s):
     """Calculates the components of the normalized tangential vector of an 
@@ -58,6 +62,7 @@ def unit_tangent_vector(xValues, func, s):
     nc1 = c1 / norm
     nc2 = c2 / norm
     return nc1, nc2
+
 
 def critical_coeff(xValues, func, s):
     """Calculates the values of the critical coefficient as well as the 
@@ -130,16 +135,22 @@ def plotting(
     xValues = np.arange(-valueLimit, valueLimit, 0.01)
     fig.set_figheight(10)
     fig.set_figwidth(10)
-    ax3.set_xlabel(r'$x$', fontsize=16)
-    ax1.set_ylabel(r'${T}_0(s,x)$', fontsize=16)
-    ax2.set_ylabel(r'${T}_1(s,x)$', fontsize=16)
+    ax1.set_title(r'Components of tangent vectors ${T(s,x)}$')
+    #ax1.set_xlabel(r'$x$')
+    #ax2.set_xlabel(r'$x$')
+    ax3.set_xlabel(r'$x$')
+    ax1.set_ylabel(r'${T}_0(s,x)$')
+    ax2.set_ylabel(r'${T}_1(s,x)$')
     ax2.set_xticks(np.arange(-valueLimit, valueLimit+1, .5))
+    ax1.minorticks_on()
+    ax2.minorticks_on()
     #plt.subplots_adjust(top=0.8)
+
     function = x**2
     try:
         function = eval(input)
     except Exception:
-        # iInore error that appears when not done writing
+        # Ignore error that appears when not done writing
         pass
     xtangent, ytangent = unit_tangent_vector(xValues, function, s)
     A, chi, k = critical_coeff(xValues, function, s)
@@ -149,8 +160,13 @@ def plotting(
     ax3.plot(xValues, chi, label=r'$\chi$')
     ax3.plot(xValues, k, label=r'$k$')
     #ax3.plot(values, np.zeros(len(values)), color='black')
-
-    ax3.legend(fontsize=12, loc="best")
+    
+    # plot red region with x1 and x2 the parameters that parametrize the swallow tail
+    #ax1.axvspan(x1, x2, alpha=0.2, color='red')
+    #ax2.axvspan(x1, x2, alpha=0.2, color='red')
+    #ax3.axvspan(x1, x2, alpha=0.2, color='red')
+    
+    ax3.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     
     # Save plots
     if saveFile == True:
@@ -162,7 +178,6 @@ def plotting(
     ax1.cla()
     ax2.cla()
     ax3.cla()
-
 
 def main():
     # Style such that whole text fits
