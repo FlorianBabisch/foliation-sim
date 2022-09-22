@@ -86,6 +86,8 @@
 <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span><span class="p">,</span> <span class="n">interactive</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">interact_manual</span><span class="p">,</span> <span class="n">IntSlider</span><span class="p">,</span> <span class="n">HBox</span><span class="p">,</span> <span class="n">VBox</span><span class="p">,</span> <span class="n">Layout</span><span class="p">,</span> <span class="n">Dropdown</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">clear_output</span>
 <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 
 <span class="c1"># SymPy symbols</span>
 <span class="c1"># In the following x cannot be used as a variable for anything else!</span>
@@ -93,11 +95,13 @@
 
 <span class="c1"># Global figure</span>
 <span class="c1"># Set sharex to False if you want to save an image of only the first axis</span>
-<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Set it to True if you want to have both plots use the same axis</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># Class is not written by me, source: </span>
 <span class="c1"># https://stackoverflow.com/questions/13054758/python-finding-multiple-roots-of-nonlinear-equation</span>
 <div class="viewcode-block" id="ClassRoots"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.ClassRoots">[docs]</a><span class="k">class</span> <span class="nc">ClassRoots</span><span class="p">:</span>
+    <span class="c1"># binary search</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
@@ -214,10 +218,13 @@
 <span class="sd">        tuple </span>
 <span class="sd">            Components of the vector evaluated at the given x-coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">npFunc0</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-    <span class="n">npFunc1</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-    <span class="n">v0</span> <span class="o">=</span> <span class="n">npFunc0</span><span class="p">(</span><span class="n">xValues</span><span class="p">)</span>
-    <span class="n">v1</span> <span class="o">=</span> <span class="n">npFunc1</span><span class="p">(</span><span class="n">xValues</span><span class="p">)</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">)</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">xValues</span><span class="p">,</span> <span class="n">v0</span> <span class="o">=</span> <span class="n">transform_function</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">v0</span><span class="p">)</span>
+    <span class="n">xValues</span><span class="p">,</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">transform_function</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">v1</span><span class="p">)</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v0</span><span class="p">)</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v1</span></div>
 
 
@@ -270,11 +277,14 @@
 <span class="sd">        tuple </span>
 <span class="sd">            The x- and y-values of the normal vector of the given function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">)</span>
     <span class="c1"># check if function is constant</span>
     <span class="k">if</span> <span class="n">isfloat</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">))]</span>
-        <span class="n">xValues</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">))]</span>
-        <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">xValues</span>
+        <span class="n">xComponent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>
+        <span class="n">yComponent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>
+        <span class="n">xComponent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xComponent</span><span class="p">)</span>
+        <span class="n">yComponent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yComponent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xComponent</span><span class="p">,</span> <span class="n">yComponent</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">euclidean_unit_vector</span><span class="p">(</span><span class="n">transform_vector</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">euclidean_normal_vector</span><span class="p">(</span><span class="n">func</span><span class="p">)))</span></div>
 
@@ -294,11 +304,16 @@
 <span class="sd">        tuple </span>
 <span class="sd">            The x- and y-values of the normal vector of the given function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">)</span>
+    <span class="c1"># check if function is constant</span>
     <span class="k">if</span> <span class="n">isfloat</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">))]</span>
-        <span class="n">xValues</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xValues</span><span class="p">))]</span>
-        <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">xValues</span>
-    <span class="k">return</span> <span class="n">minkowski_unit_vector</span><span class="p">(</span><span class="n">transform_vector</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">minkowski_normal_vector</span><span class="p">(</span><span class="n">func</span><span class="p">)))</span></div>
+        <span class="n">xComponent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>
+        <span class="n">yComponent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>
+        <span class="n">xComponent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xComponent</span><span class="p">)</span>
+        <span class="n">yComponent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yComponent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xComponent</span><span class="p">,</span> <span class="n">yComponent</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">minkowski_unit_vector</span><span class="p">(</span><span class="n">transform_vector</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">minkowski_normal_vector</span><span class="p">(</span><span class="n">func</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="euclidean_norm"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.euclidean_norm">[docs]</a><span class="k">def</span> <span class="nf">euclidean_norm</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
@@ -314,7 +329,11 @@
 <span class="sd">        float</span>
 <span class="sd">            Euclidean norm of the given vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">radicand</span> <span class="o">=</span> <span class="n">v0</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">v1</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">radicand</span> <span class="o">=</span> <span class="n">radicand</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">radicand</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="minkowski_norm"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.minkowski_norm">[docs]</a><span class="k">def</span> <span class="nf">minkowski_norm</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
@@ -330,7 +349,13 @@
 <span class="sd">        float</span>
 <span class="sd">            Minkowski norm of the given vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">radicand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">radicand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v0</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">v1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Norm is infinite.&#39;</span><span class="p">)</span>
+    <span class="n">radicand</span> <span class="o">=</span> <span class="n">radicand</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">radicand</span><span class="p">)</span></div>
 
 
@@ -365,10 +390,10 @@
 <span class="sd">            Normalized components of the given vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="n">minkowski_norm</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">entry</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">norm</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">entry</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">norm</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span></div>
         
 
 <div class="viewcode-block" id="euclidean_inner_product"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.euclidean_inner_product">[docs]</a><span class="k">def</span> <span class="nf">euclidean_inner_product</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
@@ -405,65 +430,26 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
-
-<div class="viewcode-block" id="euclidean_angle_between_vectors"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.euclidean_angle_between_vectors">[docs]</a><span class="k">def</span> <span class="nf">euclidean_angle_between_vectors</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculates angle between two 2 dimensional vectors in Euclidean space.</span>
-<span class="sd">    </span>
+<div class="viewcode-block" id="reverse_sublist"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.reverse_sublist">[docs]</a><span class="k">def</span> <span class="nf">reverse_sublist</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reverses sublist of given list</span>
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        v : tuple </span>
-<span class="sd">            Vector with two components.</span>
-<span class="sd">        w : tuple</span>
-<span class="sd">            Vector with two components.</span>
+<span class="sd">        lst : list</span>
+<span class="sd">            List where sublist is reversed.</span>
+<span class="sd">        start : integer</span>
+<span class="sd">            Index where sublist starts.</span>
+<span class="sd">        end : integer</span>
+<span class="sd">            Index where sublist ends.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float </span>
-<span class="sd">            Angle between the vectors v and w.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">euclidean_inner_product</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">w</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span></div>
-
-
-<div class="viewcode-block" id="unit_circle"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.unit_circle">[docs]</a><span class="k">def</span> <span class="nf">unit_circle</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculate values of a unit circle around a given point.</span>
+<span class="sd">        lst</span>
+<span class="sd">            List where sublist is reversed.</span>
 <span class="sd">    </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        t : list</span>
-<span class="sd">            Values that parametrize the circle.</span>
-<span class="sd">        center : tuple</span>
-<span class="sd">            Point around which the unit circle is centered. </span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            The x- and y-values of the points of the unit circle.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">px</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">py</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span> </div>
-
-
-<div class="viewcode-block" id="circle"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.circle">[docs]</a><span class="k">def</span> <span class="nf">circle</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculate values of a circle with given radius centered around a given point.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        t : list</span>
-<span class="sd">            Values that parametrize the circle.</span>
-<span class="sd">        center : tuple</span>
-<span class="sd">            Point around which the circle is centered.</span>
-<span class="sd">        radius : float</span>
-<span class="sd">            Radius of the circle.</span>
-<span class="sd">       </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            The x- and y-values of the points of the unit circle.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">px</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span>
-    <span class="n">py</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span>
-    <span class="k">return</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span> </div>
+    <span class="n">lst</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">lst</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">lst</span></div>
 
 
 <div class="viewcode-block" id="curvature"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.curvature">[docs]</a><span class="k">def</span> <span class="nf">curvature</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -534,111 +520,6 @@
         <span class="n">kx</span> <span class="o">=</span> <span class="n">px</span> <span class="o">-</span> <span class="p">(</span><span class="n">npFuncPrime</span><span class="p">(</span><span class="n">px</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">npFuncPrime</span><span class="p">(</span><span class="n">px</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">npFunc2Prime</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
         <span class="n">ky</span> <span class="o">=</span> <span class="n">py</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">npFuncPrime</span><span class="p">(</span><span class="n">px</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">npFunc2Prime</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">kx</span><span class="p">,</span> <span class="n">ky</span></div>
-
-
-<div class="viewcode-block" id="find_duplicates"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.find_duplicates">[docs]</a><span class="k">def</span> <span class="nf">find_duplicates</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns duplicates in a given list.</span>
-<span class="sd">    </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        lst : list</span>
-<span class="sd">            List of values.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list </span>
-<span class="sd">            Values that appeared more than once.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">uniques</span><span class="p">,</span> <span class="n">duplicates</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
-            <span class="n">uniques</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">duplicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">duplicates</span></div>
-
-
-<div class="viewcode-block" id="closest_value"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.closest_value">[docs]</a><span class="k">def</span> <span class="nf">closest_value</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns value closest to the input value in a given list.</span>
-<span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        lst : list</span>
-<span class="sd">            List of numbers.</span>
-<span class="sd">        value : float</span>
-<span class="sd">            Value of which the closest element in the list is searched for.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            Index of element of array that is closest to the given value and the corresponding value in the list.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarry</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">index</span><span class="p">,</span> <span class="n">arr</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="smallest_distance"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.smallest_distance">[docs]</a><span class="k">def</span> <span class="nf">smallest_distance</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find smallest distance between neighboring elements of a list.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        lst : list</span>
-<span class="sd">            List of numbers.</span>
-<span class="sd">    </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float</span>
-<span class="sd">            Smallest distance between neighboring elements.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
-    <span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">:</span>
-            <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="index_normal_sign_flip"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.index_normal_sign_flip">[docs]</a><span class="k">def</span> <span class="nf">index_normal_sign_flip</span><span class="p">(</span><span class="n">surface</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Returns index of x-coordinate where a sign flip of the normal vectors appears.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        surface : tuple</span>
-<span class="sd">            The x- and y-coordinates of a 1-surface.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        integer</span>
-<span class="sd">            Index of x-coordinate where the normal vector of the surfaces changes sign.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">i</span></div>
-
-
-<div class="viewcode-block" id="angle_at_sign_flip"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.angle_at_sign_flip">[docs]</a><span class="k">def</span> <span class="nf">angle_at_sign_flip</span><span class="p">(</span><span class="n">surface</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the angle between the two normal vectors of a 1-surface </span>
-<span class="sd">       at which the x-component changes sign.</span>
-<span class="sd">    </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        surface : tuple</span>
-<span class="sd">            The x- and y-coordinates of a 1-surface.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float </span>
-<span class="sd">            Angle between two normal vectors that have different sign in the x-component.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">index_normal_sign_flip</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
-    <span class="n">sx</span><span class="p">,</span><span class="n">sy</span> <span class="o">=</span> <span class="n">surface</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="n">sx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sy</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">sx</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">sy</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="k">return</span> <span class="n">euclidean_angle_between_vectors</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="push_surface"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.push_surface">[docs]</a><span class="k">def</span> <span class="nf">push_surface</span><span class="p">(</span><span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVector</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -723,7 +604,8 @@
         <span class="n">spacing</span><span class="p">,</span> 
         <span class="n">initialSurface</span><span class="p">,</span> 
         <span class="n">unitNormalVector</span><span class="p">,</span> 
-        <span class="n">direction</span><span class="p">):</span>
+        <span class="n">direction</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns list of parameter intervals of the swallow tails of the surfaces </span>
 <span class="sd">        obtained by pushing the initial surface along the normals. </span>
 <span class="sd">       </span>
@@ -753,6 +635,8 @@
 <span class="sd">            The x- and y-coordinates of normal vectors of initial surface.</span>
 <span class="sd">        direction : integer</span>
 <span class="sd">            Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.</span>
+<span class="sd">        metric : boolean</span>
+<span class="sd">            If True, then use Euclidean metric, else use Minkowski metric.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -767,7 +651,9 @@
     <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">calculate_self_intersections</span><span class="p">(</span><span class="n">newSurface</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">xs</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ys</span><span class="p">:</span> <span class="k">return</span> <span class="p">[[</span><span class="n">nan</span><span class="p">,</span> <span class="n">nan</span><span class="p">]]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">):</span> <span class="n">lengthSelfInts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
-
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+    
     <span class="c1"># Create list of intervals of parameters that parametrize the swallow tail</span>
     <span class="c1"># this is done for every point where the surface self-intersects, because there the swallow tails start</span>
     <span class="c1"># Assumption: The swallow tails are not tilted and do not intersect another swallow tail of the same surface.</span>
@@ -776,31 +662,46 @@
     <span class="c1"># 2) Consider only points of the surface that lie in a region 0.02 to the left and 0.02 to the right of point of self-intersection</span>
     <span class="c1"># 2.1) Note that x-values are always 0.01 apart from one another.</span>
     <span class="c1"># 3) Consider only points that lie above or below the swallow tail depending on how it is oriented</span>
-    <span class="c1"># 3.1) For s &gt; 0 the swallow tail is below the surface and for s &lt; 0 it is above the surface</span>
+    <span class="c1"># 3.1) Euclidean Case: For s &gt; 0 the swallow tail is &quot;below&quot; the surface and for s &lt; 0 it is &quot;above&quot; the surface</span>
+    <span class="c1"># 3.2) Minkowski Case: For s &lt; 0 the swallow tails is &quot;above&quot; the surface and for s &lt; 0 it is &quot;below&quot; the surface</span>
     <span class="c1"># 4) Divide the remaining points into points that lie to the left and to the right of the self-intersection</span>
     <span class="c1"># 5) Take the largest x-value of the points to the left of the self-intersection and the smallest x-value</span>
     <span class="c1">#    of the points to the right of the self-intersection. These are the x-values that define the parameter</span>
     <span class="c1">#    interval of the swallow tail.</span>
 
+    <span class="c1"># Orientation determines whether tail is &quot;above&quot; surface or &quot;below&quot;.</span>
+    <span class="n">orientation</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">metric</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">orientation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span> <span class="n">orientation</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">orientation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span> <span class="n">orientation</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lengthSelfInts</span><span class="p">):</span>
         <span class="n">tailInterval</span><span class="p">,</span> <span class="n">leftxValue</span><span class="p">,</span> <span class="n">rightxValue</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">xValue</span> <span class="ow">in</span> <span class="n">xValues</span><span class="p">:</span>
-            <span class="n">normal</span> <span class="o">=</span> <span class="n">euclidean_normal_values</span><span class="p">(</span><span class="n">xValue</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+            <span class="n">xCopy</span> <span class="o">=</span> <span class="n">xValue</span>
+            <span class="n">xValue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">xValue</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">metric</span><span class="p">:</span>
+                <span class="n">normal</span> <span class="o">=</span> <span class="n">euclidean_normal_values</span><span class="p">(</span><span class="n">xValue</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">normal</span> <span class="o">=</span> <span class="n">minkowski_normal_values</span><span class="p">(</span><span class="n">xValue</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
             <span class="n">nx</span> <span class="o">=</span> <span class="n">normal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">xValue</span>
             <span class="n">ny</span> <span class="o">=</span> <span class="n">normal</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">npF</span><span class="p">(</span><span class="n">xValue</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">nx</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.02</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">orientation</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">ny</span> <span class="o">&gt;=</span> <span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                         <span class="k">if</span> <span class="n">nx</span> <span class="o">&lt;</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                            <span class="n">leftxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xValue</span><span class="p">)</span>
+                            <span class="n">leftxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xCopy</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">rightxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xValue</span><span class="p">)</span>
+                            <span class="n">rightxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xCopy</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">ny</span> <span class="o">&lt;=</span> <span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                         <span class="k">if</span> <span class="n">nx</span> <span class="o">&lt;</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                            <span class="n">leftxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xValue</span><span class="p">)</span>
+                            <span class="n">leftxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xCopy</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">rightxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xValue</span><span class="p">)</span>
+                            <span class="n">rightxValue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xCopy</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">leftxValue</span> <span class="ow">and</span> <span class="n">rightxValue</span><span class="p">:</span>
             <span class="n">tailInterval</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">leftxValue</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">rightxValue</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span> <span class="n">tailInterval</span> <span class="o">=</span> <span class="p">[</span><span class="n">nan</span><span class="p">,</span> <span class="n">nan</span><span class="p">]</span>
@@ -840,18 +741,16 @@
     <span class="k">if</span> <span class="n">isfloat</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">curv</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xValues</span><span class="p">]</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">curv</span><span class="p">)</span>
+        <span class="k">return</span>
     <span class="c1"># if function is linear</span>
-    <span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="n">is_polynomial</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">degree</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">degree</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">is_polynomial</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">degree</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">curv</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xValues</span><span class="p">]</span>
             <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">curv</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">curv</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">curvature</span><span class="p">(</span><span class="n">func</span><span class="p">),</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">curv</span><span class="p">(</span><span class="n">xValues</span><span class="p">))</span>
+            <span class="k">return</span>
     <span class="c1"># all other cases</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">curv</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">curvature</span><span class="p">(</span><span class="n">func</span><span class="p">),</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">curv</span><span class="p">(</span><span class="n">xValues</span><span class="p">))</span></div>
+    <span class="n">curv</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">curvature</span><span class="p">(</span><span class="n">func</span><span class="p">),</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">curv</span><span class="p">(</span><span class="n">xValues</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="draw_centers_osc_circ"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.draw_centers_osc_circ">[docs]</a><span class="k">def</span> <span class="nf">draw_centers_osc_circ</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">xValues</span><span class="p">,</span> <span class="n">connectedCircles</span><span class="p">):</span>
@@ -902,7 +801,8 @@
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="c1"># raised if radii is empty</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No Radii could be calculated.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">connectedCircles</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kx_surf</span><span class="p">,</span> <span class="n">ky_surf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Centers of Osculating Circles&#39;</span><span class="p">)</span>
+        <span class="c1">#ax1.plot(kx_surf, ky_surf, color=&#39;green&#39;, label=&#39;Centers of Osculating Circles&#39;)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kx_surf</span><span class="p">,</span> <span class="n">ky_surf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Focal Locus&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">kx_surf</span><span class="p">,</span> <span class="n">ky_surf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Centers of Osculating Circles&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></div>
  
@@ -973,7 +873,7 @@
     <span class="n">ax1</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">yc</span><span class="p">,</span> <span class="n">c1</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">c2</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="draw_surfaces"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.draw_surfaces">[docs]</a><span class="k">def</span> <span class="nf">draw_surfaces</span><span class="p">(</span><span class="n">numberOfSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">):</span>
+<div class="viewcode-block" id="draw_surfaces"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.draw_surfaces">[docs]</a><span class="k">def</span> <span class="nf">draw_surfaces</span><span class="p">(</span><span class="n">numberOfSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">cnorm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Draws the surfaces that arise when pushing the initial surface along the normal lines.</span>
 <span class="sd">    </span>
 <span class="sd">        Parameters</span>
@@ -991,13 +891,17 @@
 <span class="sd">            Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.</span>
 <span class="sd">        sameSurfaceColor : boolean</span>
 <span class="sd">            Whether the surfaces are drawn with the same color or with individual colors.</span>
+<span class="sd">        cmap : matplotlib.colors.LinearSegmentedColormap</span>
+<span class="sd">        cnorm : matplotlib.colors.Normalize</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numberOfSurfaces</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
         <span class="k">if</span> <span class="n">sameSurfaceColor</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">+</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
             <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;green&#39;</span>
-        <span class="k">else</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">+</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">cnorm</span><span class="p">(</span><span class="n">direction</span><span class="o">*</span><span class="n">i</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">cnorm</span><span class="p">(</span><span class="n">direction</span><span class="o">*</span><span class="n">i</span><span class="p">))</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">spacing</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">*</span> <span class="n">direction</span>
         <span class="n">newSurface</span> <span class="o">=</span> <span class="n">push_surface</span><span class="p">(</span><span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
@@ -1012,7 +916,10 @@
         <span class="n">initialSurface</span><span class="p">,</span> 
         <span class="n">unitNormalVectors</span><span class="p">,</span> 
         <span class="n">direction</span><span class="p">,</span> 
-        <span class="n">sameSurfaceColor</span><span class="p">):</span>
+        <span class="n">sameSurfaceColor</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="p">,</span>
+        <span class="n">cnorm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Draws modified surfaces, that is the surfaces where the swallow tail is removed. </span>
 <span class="sd">        It also prints the parameter interval of the swallow tails that are drawn.</span>
 
@@ -1035,15 +942,21 @@
 <span class="sd">            Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.</span>
 <span class="sd">        sameSurfaceColor : boolean</span>
 <span class="sd">            Whether the surfaces are drawn with the same color or with individual colors.</span>
+<span class="sd">        metric : boolean</span>
+<span class="sd">            If True, then use Euclidean metric, else use Minkowski metric.</span>
+<span class="sd">        cmap : matplotlib.colors.LinearSegmentedColormap</span>
+<span class="sd">        cnorm : matplotlib.colors.Normalize</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">numberOfSurfaces</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">xValues_mod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">valueLimit</span><span class="p">,</span> <span class="n">valueLimit</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>  
         <span class="k">if</span> <span class="n">sameSurfaceColor</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">+</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
             <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;green&#39;</span>
-        <span class="k">else</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">+</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">cnorm</span><span class="p">(</span><span class="n">direction</span><span class="o">*</span><span class="n">i</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">cnorm</span><span class="p">(</span><span class="n">direction</span><span class="o">*</span><span class="n">i</span><span class="p">))</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">spacing</span>
-        <span class="n">allTailIntervals</span> <span class="o">=</span> <span class="n">parameter_self_intersection</span><span class="p">(</span><span class="n">xValues_mod</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+        <span class="n">allTailIntervals</span> <span class="o">=</span> <span class="n">parameter_self_intersection</span><span class="p">(</span><span class="n">xValues_mod</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
         <span class="c1"># modify parameter interval</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">allTailIntervals</span><span class="p">)):</span>
             <span class="n">tailInterval</span> <span class="o">=</span> <span class="n">allTailIntervals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
@@ -1054,7 +967,10 @@
                         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xValues_mod</span><span class="p">)):</span>
                             <span class="k">if</span>  <span class="n">xValues_mod</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tailInterval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">xValues_mod</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tailInterval</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                                 <span class="n">xValues_mod</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-            <span class="n">newNormics</span> <span class="o">=</span> <span class="n">euclidean_normal_values</span><span class="p">(</span><span class="n">xValues_mod</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">metric</span><span class="p">:</span>
+                <span class="n">newNormics</span> <span class="o">=</span> <span class="n">euclidean_normal_values</span><span class="p">(</span><span class="n">xValues_mod</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newNormics</span> <span class="o">=</span> <span class="n">minkowski_normal_values</span><span class="p">(</span><span class="n">xValues_mod</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
         <span class="n">newSurface</span> <span class="o">=</span> <span class="n">push_surface</span><span class="p">(</span><span class="n">initialSurface</span><span class="p">,</span> <span class="n">newNormics</span><span class="p">,</span> <span class="n">direction</span> <span class="o">*</span> <span class="n">distance</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">newSurface</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;s = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">direction</span> <span class="o">*</span> <span class="n">distance</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span></div>
 
@@ -1100,14 +1016,43 @@
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/full-&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
     <span class="c1"># Save just the portion inside the second axis&#39;s boundaries</span>
     <span class="n">extent</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">dpi_scale_trans</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
-    <span class="c1"># Pad the saved area by 10% in the x-direction and 20% in the y-direction and save as pdf</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">expanded</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">))</span>
+    <span class="c1"># Pad the saved area by 40% in the x-direction and 25% in the y-direction and save as pdf</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">expanded</span><span class="p">(</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">))</span>
     <span class="c1"># save whole figure as eps</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/full-&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.eps&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;eps&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
     <span class="c1"># Save just the portion inside the second axis&#39;s boundaries</span>
     <span class="n">extent</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">dpi_scale_trans</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
-    <span class="c1"># Pad the saved area by 10% in the x-direction and 20% in the y-direction and save as eps</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.eps&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">expanded</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;eps&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span></div>
+    <span class="c1"># Pad the saved area by 40% in the x-direction and 20% in the y-direction and save as eps</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.eps&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">expanded</span><span class="p">(</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;eps&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="py_to_tex"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.py_to_tex">[docs]</a><span class="k">def</span> <span class="nf">py_to_tex</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Replaces python operators with latex operators.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters </span>
+<span class="sd">        ----------</span>
+<span class="sd">        str : str</span>
+<span class="sd">            String python expressions are replaced by the proper latex expressions.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str </span>
+<span class="sd">            Modified string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;**&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">cdot &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">sin &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cos&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">cos &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;tan&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">tan &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cot&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">cot &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sinh&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">sinh &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cosh&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">cosh &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">tanh &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;coth&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">coth &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">exp &#39;</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39; </span><span class="se">\\</span><span class="s1">log &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="drawing"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.drawing">[docs]</a><span class="k">def</span> <span class="nf">drawing</span><span class="p">(</span> 
         <span class="n">inputFunction</span><span class="p">,</span>
@@ -1195,12 +1140,16 @@
 <span class="sd">            If True the plot that it shown after pressing the &#39;Run interact&#39; button is saved under the name written in the</span>
 <span class="sd">            &#39;Name of Image&#39; textbox.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">titleFunction</span> <span class="o">=</span> <span class="n">py_to_tex</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inputFunction</span><span class="p">))</span>
     <span class="c1"># Settings of figure and axis</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">set_figheight</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">set_figwidth</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Evolution of initial surface $f(x) =$&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inputFunction</span><span class="p">))</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Signed curvature $k$&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Evolution of the initial surface $f(x) = &#39;</span> <span class="o">+</span> <span class="n">titleFunction</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;$.&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Signed curvature $k$&#39;</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">changeLimits</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">negXLim</span><span class="p">,</span> <span class="n">posXLim</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">negYLim</span><span class="p">,</span> <span class="n">posYLim</span><span class="p">)</span>
@@ -1208,6 +1157,14 @@
     <span class="c1"># Create evenly spaced values within a given interval</span>
     <span class="n">xValues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">valueLimit</span><span class="p">,</span> <span class="n">valueLimit</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
     <span class="n">sValues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">numberOfPastSurfaces</span> <span class="o">/</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">/</span> <span class="n">spacing</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="c1"># create normalized cmap</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span>
+    <span class="k">if</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cnorm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="n">numberOfPastSurfaces</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">numberOfPastSurfaces</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">numberOfPastSurfaces</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cnorm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="n">numberOfFutureSurfaces</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">numberOfFutureSurfaces</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cnorm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="n">numberOfPastSurfaces</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">numberOfFutureSurfaces</span><span class="p">)</span>
     <span class="c1"># Transform text to python expression</span>
     <span class="n">func</span> <span class="o">=</span> <span class="n">x</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1218,33 +1175,37 @@
     <span class="n">initialSurface</span> <span class="o">=</span> <span class="n">transform_function</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
     <span class="c1"># Choice of metric</span>
     <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$y$&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$k$&#39;</span><span class="p">)</span>
         <span class="n">unitNormalVectors</span> <span class="o">=</span> <span class="n">euclidean_normal_values</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
         <span class="n">draw_curvature</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
         <span class="c1"># Choice of drawing the centers of osculating circles</span>
         <span class="k">if</span> <span class="n">showCentersOscCircle</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">draw_centers_osc_circ</span><span class="p">(</span><span class="n">initialSurface</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">xValues</span><span class="p">,</span> <span class="n">connectedCenters</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$t$&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$k$&#39;</span><span class="p">)</span>
         <span class="n">unitNormalVectors</span> <span class="o">=</span> <span class="n">minkowski_normal_values</span><span class="p">(</span><span class="n">xValues</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
     <span class="c1"># Choice of drawing normics</span>
     <span class="k">if</span> <span class="n">showNormics</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">draw_normics</span><span class="p">(</span><span class="n">sValues</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="n">normicSpacing</span><span class="p">)</span>
     <span class="c1"># Draw initial surface</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">initialSurface</span><span class="p">,</span> <span class="s1">&#39;pink&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;s = 0&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">initialSurface</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">cnorm</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;s = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">showSurface</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">showTails</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="c1"># Draw &#39;future&#39; surfaces</span>
-            <span class="k">if</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">draw_surfaces</span><span class="p">(</span><span class="n">numberOfFutureSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">)</span>
             <span class="c1"># Draw &#39;past&#39; surfaces</span>
             <span class="k">if</span> <span class="n">numberOfPastSurfaces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">draw_surfaces</span><span class="p">(</span><span class="n">numberOfPastSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span> 
-            <span class="c1"># Draw modified &#39;future&#39; surfaces</span>
+                <span class="n">draw_surfaces</span><span class="p">(</span><span class="n">numberOfPastSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">cnorm</span><span class="p">)</span>
+            <span class="c1"># Draw &#39;future&#39; surfaces</span>
             <span class="k">if</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">draw_modified_surfaces</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">valueLimit</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">)</span>    
+                <span class="n">draw_surfaces</span><span class="p">(</span><span class="n">numberOfFutureSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">cnorm</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
             <span class="c1"># Draw modified &#39;past&#39; surfaces</span>
             <span class="k">if</span> <span class="n">numberOfPastSurfaces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">draw_modified_surfaces</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">valueLimit</span><span class="p">,</span> <span class="n">numberOfPastSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">)</span>    
+                <span class="n">draw_modified_surfaces</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">valueLimit</span><span class="p">,</span> <span class="n">numberOfPastSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">cnorm</span><span class="p">)</span>    
+            <span class="c1"># Draw modified &#39;future&#39; surfaces</span>
+            <span class="k">if</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">draw_modified_surfaces</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">valueLimit</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">initialSurface</span><span class="p">,</span> <span class="n">unitNormalVectors</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sameSurfaceColor</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">cnorm</span><span class="p">)</span>    
     <span class="c1"># Draw tangent vector</span>
     <span class="k">if</span> <span class="n">tangentVector</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">draw_tangents</span><span class="p">(</span><span class="n">tangent_xValues</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">/</span> <span class="n">spacing</span><span class="p">)</span>
@@ -1263,7 +1224,15 @@
         <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
         <span class="c1"># Sort both labels and handles by labels</span>
         <span class="n">labels</span><span class="p">,</span> <span class="n">handles</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">handles</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">handles</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">numberOfPastSurfaces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># reverse order of negative s labels</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+            <span class="n">handles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">reverse_sublist</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">+</span> <span class="n">numberOfPastSurfaces</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">handles</span> <span class="o">=</span> <span class="n">reverse_sublist</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">numberOfFutureSurfaces</span> <span class="o">+</span> <span class="n">numberOfPastSurfaces</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
 
     <span class="c1"># Save plots</span>
     <span class="k">if</span> <span class="n">saveFile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
@@ -1274,7 +1243,6 @@
     <span class="n">display</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span></div>
-
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../foliationSimulation.html#foliationSimulation.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="c1"># Style such that whole text fits</span>
@@ -1311,7 +1279,7 @@
         <span class="n">tangentVector</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Show Tangent Vector&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
         <span class="n">showSelfIntersections</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Show Points of Self-Intersection&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
         <span class="n">showTails</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Show Swallow Tails&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
-        <span class="n">sameSurfaceColor</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;All Surfaces same Color&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
+        <span class="n">sameSurfaceColor</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;All Surfaces same Color&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
         <span class="n">saveFile</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Save File&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
         <span class="n">inputSaveFileName</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span>
             <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;Insert Name of Image&#39;</span><span class="p">,</span>

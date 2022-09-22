@@ -18,8 +18,7 @@
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="foliation-sim" href="modules.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,11 +37,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">foliation-sim</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">foliationSimulation module</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">foliation-sim</a></li>
 </ul>
 
         </div>
@@ -59,7 +55,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">foliation-sim</a> &raquo;</li>
       <li>foliationSimulation module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/foliationSimulation.rst.txt" rel="nofollow"> View page source</a>
@@ -94,23 +89,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.angle_at_sign_flip">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">angle_at_sign_flip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#angle_at_sign_flip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.angle_at_sign_flip" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the angle between the two normal vectors of a 1-surface
-at which the x-component changes sign.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>surface<span class="classifier">tuple</span></dt><dd><p>The x- and y-coordinates of a 1-surface.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>float</dt><dd><p>Angle between two normal vectors that have different sign in the x-component.</p>
-</dd>
-</dl>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="foliationSimulation.calculate_self_intersections">
 <span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">calculate_self_intersections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#calculate_self_intersections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.calculate_self_intersections" title="Permalink to this definition"></a></dt>
 <dd><p>Find all the points where a 1-surface self-intersects.</p>
@@ -120,47 +98,6 @@ at which the x-component changes sign.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>x- and y-coordinates of self-intersections.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.circle">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">circle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#circle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.circle" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate values of a circle with given radius centered around a given point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>list</em>) – Values that parametrize the circle.</p></li>
-<li><p><strong>center</strong> (<em>tuple</em>) – Point around which the circle is centered.</p></li>
-<li><p><strong>radius</strong> (<em>float</em>) – Radius of the circle.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The x- and y-values of the points of the unit circle.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.closest_value">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">closest_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#closest_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.closest_value" title="Permalink to this definition"></a></dt>
-<dd><p>Returns value closest to the input value in a given list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lst</strong> (<em>list</em>) – List of numbers.</p></li>
-<li><p><strong>value</strong> (<em>float</em>) – Value of which the closest element in the list is searched for.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Index of element of array that is closest to the given value and the corresponding value in the list.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple</p>
@@ -241,7 +178,7 @@ This gives the interval in which extrema are searched for.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foliationSimulation.draw_modified_surfaces">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">draw_modified_surfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueLimit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfSurfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSurface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitNormalVectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sameSurfaceColor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#draw_modified_surfaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.draw_modified_surfaces" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">draw_modified_surfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueLimit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfSurfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSurface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitNormalVectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sameSurfaceColor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cnorm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#draw_modified_surfaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.draw_modified_surfaces" title="Permalink to this definition"></a></dt>
 <dd><p>Draws modified surfaces, that is the surfaces where the swallow tail is removed.
 It also prints the parameter interval of the swallow tails that are drawn.</p>
 <dl class="field-list simple">
@@ -256,6 +193,9 @@ Using this parameter the distance can be scaled as 1 / spacing.</p></li>
 <li><p><strong>unitNormalVectors</strong> (<em>tuple</em>) – The x- and y-coorindates of the unit normal vectors of the initial surface.</p></li>
 <li><p><strong>direction</strong> (<em>integer</em>) – Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.</p></li>
 <li><p><strong>sameSurfaceColor</strong> (<em>boolean</em>) – Whether the surfaces are drawn with the same color or with individual colors.</p></li>
+<li><p><strong>metric</strong> (<em>boolean</em>) – If True, then use Euclidean metric, else use Minkowski metric.</p></li>
+<li><p><strong>cmap</strong> (<em>matplotlib.colors.LinearSegmentedColormap</em>) – </p></li>
+<li><p><strong>cnorm</strong> (<em>matplotlib.colors.Normalize</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -297,7 +237,7 @@ Using this parameter the distance can be scaled as 1 / spacing.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foliationSimulation.draw_surfaces">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">draw_surfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numberOfSurfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSurface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitNormalVectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sameSurfaceColor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#draw_surfaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.draw_surfaces" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">draw_surfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numberOfSurfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSurface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitNormalVectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sameSurfaceColor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cnorm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#draw_surfaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.draw_surfaces" title="Permalink to this definition"></a></dt>
 <dd><p>Draws the surfaces that arise when pushing the initial surface along the normal lines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -309,6 +249,8 @@ Using this parameter the distance can be scaled as 1 / spacing.</p></li>
 <li><p><strong>unitNormalVectors</strong> (<em>tuple</em>) – The x- and y-coorindates of the unit normal vectors of the initial surface.</p></li>
 <li><p><strong>direction</strong> (<em>integer</em>) – Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.</p></li>
 <li><p><strong>sameSurfaceColor</strong> (<em>boolean</em>) – Whether the surfaces are drawn with the same color or with individual colors.</p></li>
+<li><p><strong>cmap</strong> (<em>matplotlib.colors.LinearSegmentedColormap</em>) – </p></li>
+<li><p><strong>cnorm</strong> (<em>matplotlib.colors.Normalize</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -377,26 +319,6 @@ method if possible (see note of that method).</p></li>
 <li><p><strong>saveFile</strong> (<em>boolean</em>) – If True the plot that it shown after pressing the ‘Run interact’ button is saved under the name written in the
 ‘Name of Image’ textbox.</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.euclidean_angle_between_vectors">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">euclidean_angle_between_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#euclidean_angle_between_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.euclidean_angle_between_vectors" title="Permalink to this definition"></a></dt>
-<dd><p>Calculates angle between two 2 dimensional vectors in Euclidean space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>v</strong> (<em>tuple</em>) – Vector with two components.</p></li>
-<li><p><strong>w</strong> (<em>tuple</em>) – Vector with two components.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Angle between the vectors v and w.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -508,40 +430,6 @@ method if possible (see note of that method).</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.find_duplicates">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">find_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#find_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.find_duplicates" title="Permalink to this definition"></a></dt>
-<dd><p>Returns duplicates in a given list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lst</strong> (<em>list</em>) – List of values.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Values that appeared more than once.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.index_normal_sign_flip">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">index_normal_sign_flip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#index_normal_sign_flip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.index_normal_sign_flip" title="Permalink to this definition"></a></dt>
-<dd><p>Returns index of x-coordinate where a sign flip of the normal vectors appears.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>surface</strong> (<em>tuple</em>) – The x- and y-coordinates of a 1-surface.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Index of x-coordinate where the normal vector of the surfaces changes sign.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>integer</p>
 </dd>
 </dl>
 </dd></dl>
@@ -701,7 +589,7 @@ method if possible (see note of that method).</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foliationSimulation.parameter_self_intersection">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">parameter_self_intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfSurfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSurface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitNormalVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#parameter_self_intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.parameter_self_intersection" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">parameter_self_intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfSurfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSurface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitNormalVector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#parameter_self_intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.parameter_self_intersection" title="Permalink to this definition"></a></dt>
 <dd><p>Returns list of parameter intervals of the swallow tails of the surfaces
 obtained by pushing the initial surface along the normals.</p>
 <p class="rubric">Notes</p>
@@ -722,6 +610,7 @@ Using this parameter the distance can be scaled as 1 / spacing.</p></li>
 <li><p><strong>initialSurface</strong> (<em>tuple</em>) – The x- and y-coordinates of initial surface.</p></li>
 <li><p><strong>unitNormalVector</strong> (<em>tuple</em>) – The x- and y-coordinates of normal vectors of initial surface.</p></li>
 <li><p><strong>direction</strong> (<em>integer</em>) – Is either +1 or -1 depending on direction in which the initial surfaces is pushed along the normals.</p></li>
+<li><p><strong>metric</strong> (<em>boolean</em>) – If True, then use Euclidean metric, else use Minkowski metric.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -754,6 +643,44 @@ Using this parameter the distance can be scaled as 1 / spacing.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="foliationSimulation.py_to_tex">
+<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">py_to_tex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#py_to_tex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.py_to_tex" title="Permalink to this definition"></a></dt>
+<dd><p>Replaces python operators with latex operators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>str</strong> (<em>str</em>) – String python expressions are replaced by the proper latex expressions.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foliationSimulation.reverse_sublist">
+<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">reverse_sublist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#reverse_sublist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.reverse_sublist" title="Permalink to this definition"></a></dt>
+<dd><p>Reverses sublist of given list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst</strong> (<em>list</em>) – List where sublist is reversed.</p></li>
+<li><p><strong>start</strong> (<em>integer</em>) – Index where sublist starts.</p></li>
+<li><p><strong>end</strong> (<em>integer</em>) – Index where sublist ends.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List where sublist is reversed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>lst</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="foliationSimulation.save_plot">
 <span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">save_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#save_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.save_plot" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the current full figure and the first axis as .pdf and .eps in the figures folder which
@@ -761,23 +688,6 @@ should be located in the same folder as this notebook.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name under which the images are saved.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.smallest_distance">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">smallest_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#smallest_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.smallest_distance" title="Permalink to this definition"></a></dt>
-<dd><p>Find smallest distance between neighboring elements of a list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lst</strong> (<em>list</em>) – List of numbers.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Smallest distance between neighboring elements.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -821,34 +731,12 @@ given x-coordinates.</p>
 </div></blockquote>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="foliationSimulation.unit_circle">
-<span class="sig-prename descclassname"><span class="pre">foliationSimulation.</span></span><span class="sig-name descname"><span class="pre">unit_circle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/foliationSimulation.html#unit_circle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foliationSimulation.unit_circle" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate values of a unit circle around a given point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>list</em>) – Values that parametrize the circle.</p></li>
-<li><p><strong>center</strong> (<em>tuple</em>) – Point around which the unit circle is centered.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The x- and y-values of the points of the unit circle.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="foliation-sim" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
+          <footer>
 
   <hr/>
 
